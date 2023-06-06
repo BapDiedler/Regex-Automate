@@ -2,11 +2,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <regex.h>
-//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
+
 #ifndef GRAPHE_H
 
+//nombre maximal de sommet dans le graphe
 #define MAX_SOMMETS 200
 
+/// @brief noeud d'un graphe
 struct noeud_s{
     char ponderation;
     char sommet;
@@ -14,6 +16,7 @@ struct noeud_s{
 };
 typedef struct noeud_s noeud_s,* noeud_t;
 
+/// @brief  @brief liste de successeurs d'un sommet
 struct liste_s
 {
     noeud_t tete;
@@ -21,7 +24,7 @@ struct liste_s
 };
 typedef struct liste_s liste_s,* liste_t;
 
-
+/// @brief  @brief représentation d'un graphe
 struct graphe_s
 {
     int id;
@@ -34,6 +37,8 @@ noeud_t init_noeud();
 liste_t init_liste();
 graphe_t init_graphe();
 
+int taille(liste_t liste);
+
 int pos_sommet(graphe_t graphe, char sommet);
 
 void add_liste(liste_t* liste, char sommet, char ponderation, int id);
@@ -45,6 +50,7 @@ void free_noeud(noeud_t);
 void free_liste(liste_t);
 void free_graphe(graphe_t);
 
+void afficher_liste(liste_t liste);
 void afficher_graphe(graphe_t graphe);
 
 

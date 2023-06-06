@@ -60,7 +60,6 @@ void free_liste(liste_t liste){
 }
 
 void free_graphe(graphe_t graphe){
-    free(graphe->sommets);
     for(int i=0; i<graphe->id; i++){
         free_liste(graphe->successeurs[i]);
     }
@@ -74,25 +73,19 @@ int taille(liste_t liste){
     return 1 + taille(liste->succ);
 }
 
-void afficher_graphe(graphe_t graphe){
+void afficher_liste(liste_t liste){
     liste_t next;
-    for(int i=0; i<graphe->id; i++){
-        printf("%c : ",graphe->sommets[i]);
-        next = graphe->successeurs[i]; 
-        while(taille(next) != 0){
-            printf("%c %d| ",next->tete->sommet,next->tete->ponderation);
-            next = next->succ;
-        }
-        printf("\n");
+    next = liste; 
+    while(taille(next) != 0){
+        printf("%c %d| ",next->tete->sommet,next->tete->ponderation);
+        next = next->succ;
     }
 }
 
-
-int main(void){
-    graphe_t graphe = init_graphe();
-    add_graphe(&graphe,'a');
-    add_graphe(&graphe,'b');
-    add_succ(&graphe,'a','b',2);
-    afficher_graphe(graphe);
-    return EXIT_SUCCESS;
+void afficher_graphe(graphe_t graphe){
+    for(int i=0; i<graphe->id; i++){
+        printf("%c : ",graphe->sommets[i]);
+        afficher_liste(graphe->successeurs[i]);
+        printf("\n");
+    }
 }
