@@ -2,27 +2,49 @@
 
 noeud_t init_noeud(){
     noeud_t tete = malloc(sizeof(noeud_s));
+    tete->id = 0;
+    tete->ponderation = '0';
+    tete->sommet = '0';
     return tete;
 }
 
 liste_t init_liste(){
     liste_t liste = malloc(sizeof(liste_s));
+    liste->tete = NULL;
+    liste->succ = NULL;
     return liste;
 }
 
 graphe_t init_graphe(){
     graphe_t graphe = malloc(sizeof(graphe_s));
+    graphe->id = 0;
     return graphe;
 }
 
-void add_liste(liste_t* liste, char sommet, char ponderation){
+int pos_sommet(graphe_t graphe, char sommet){
+    for(int i=0; i<graphe->id || graphe->sommets[i] != sommet; i++)
+    return i;
+}
+
+void add_liste(liste_t* liste, char sommet, char ponderation, int id){
     noeud_t tete = init_noeud();
     tete->ponderation = ponderation;
     tete->sommet = sommet;
+    tete->id = id;
     liste_t L = init_liste();
     L->succ = (*liste);
     L->tete = tete;
     *liste = L;
+}
+
+void add_graphe(graphe_t* graphe, char val){
+    (*graphe)->sommets[(*graphe)->id] = val;
+    (*graphe)->id++;
+}
+
+void add_succ(graphe_t* graphe, char sommet, char succ, int pond){
+    int pos = pos_sommet((*graphe), sommet);
+    add_liste(&(*graphe)->successeurs[pos],succ,pond,pos_sommet((*graphe), succ));
 }
 
 void free_noeud(noeud_t noeud){
@@ -37,17 +59,40 @@ void free_liste(liste_t liste){
     }
 }
 
+void free_graphe(graphe_t graphe){
+    free(graphe->sommets);
+    for(int i=0; i<graphe->id; i++){
+        free_liste(graphe->successeurs[i]);
+    }
+    free(graphe);
+}
+
+int taille(liste_t liste){
+    if(liste == NULL){
+        return 0;
+    }
+    return 1 + taille(liste->succ);
+}
+
+void afficher_graphe(graphe_t graphe){
+    liste_t next;
+    for(int i=0; i<graphe->id; i++){
+        printf("%c : ",graphe->sommets[i]);
+        next = graphe->successeurs[i]; 
+        while(taille(next) != 0){
+            printf("%c %d| ",next->tete->sommet,next->tete->ponderation);
+            next = next->succ;
+        }
+        printf("\n");
+    }
+}
+
 
 int main(void){
-    noeud_t noeud = init_noeud();
-    noeud->ponderation = 'a';
-    noeud->sommet = 'a';
-    printf("la pondération est %c et la valeur du sommet est %c\n",noeud->ponderation,noeud->sommet);
-    free_noeud(noeud);
-
-    liste_t liste = init_liste();
-    add_liste(&liste,'a','2');
-    add_liste(&liste,'b','3');
-    printf("la pondération est %c et la valeur du sommet est %c\n",liste->tete->ponderation,liste->tete->sommet);
-    free_liste(liste);
+    graphe_t graphe = init_graphe();
+    add_graphe(&graphe,'a');
+    add_graphe(&graphe,'b');
+    add_succ(&graphe,'a','b',2);
+    afficher_graphe(graphe);
+    return EXIT_SUCCESS;
 }
